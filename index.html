@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ダンジョンウィズイン 編成ビルダー</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Monster Builder</p>
+          <h1>ダンジョンウィズイン 編成ビルダー</h1>
+        </div>
+        <a href="monster-editor.html" class="primary-btn editor-link">モンスター編集</a>
+      </header>
+
+      <main class="layout">
+        <section class="panel roster-panel">
+          <div class="panel-header">
+            <h2>モンスター一覧</h2>
+            <span id="roster-count" class="badge">0体</span>
+          </div>
+          <div class="roster-filters">
+            <label class="filter-control">
+              <span>種族</span>
+              <select id="race-filter">
+                <option value="all">すべて</option>
+              </select>
+            </label>
+            <label class="filter-control">
+              <span>等級</span>
+              <select id="rank-filter">
+                <option value="all">すべて</option>
+              </select>
+            </label>
+          </div>
+          <div class="stat-filter-box">
+            <div class="stat-filter-label">ステータス</div>
+            <div id="stat-filter-list" class="stat-filter-list"></div>
+          </div>
+          <div id="unit-list" class="unit-list"></div>
+        </section>
+
+        <section class="panel team-panel">
+          <div class="panel-header">
+            <h2>現在の編成</h2>
+            <button id="clear-btn" class="ghost-btn">クリア</button>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-item">
+              <span>総合力</span>
+              <strong id="team-score">0</strong>
+            </div>
+            <div class="summary-item">
+              <span>役割バランス</span>
+              <strong id="team-balance">0</strong>
+            </div>
+            <div class="summary-item">
+              <span>相性</span>
+              <strong id="team-synergy">0</strong>
+            </div>
+            <div class="summary-item">
+              <span>支配力</span>
+              <strong id="team-control">0</strong>
+            </div>
+          </div>
+
+          <div class="formation-saves">
+            <h3>保存編成（最大3件）</h3>
+            <div id="formation-save-list" class="formation-save-list"></div>
+            <p id="formation-save-status" class="formation-save-status" role="status" aria-live="polite"></p>
+          </div>
+
+          <div id="team-list" class="team-list"></div>
+        </section>
+
+        <section class="panel sim-panel">
+          <div class="panel-header">
+            <h2>パーツシミュレーション</h2>
+          </div>
+          <div id="part-simulator" class="part-simulator"></div>
+        </section>
+
+        <div id="part-selector-modal" class="modal-backdrop hidden" aria-hidden="true"></div>
+
+        <section class="panel suggestion-panel">
+          <div class="panel-header">
+            <h2>おすすめ編成</h2>
+          </div>
+          <div id="suggestion-result" class="suggestion-box">
+            まだ候補がありません。
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="rank5-data.js"></script>
+    <script src="rank6-data.js"></script>
+    <script src="rank7-data.js"></script>
+    <script src="rank8-data.js"></script>
+    <script src="rank9-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
