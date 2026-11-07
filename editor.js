@@ -183,12 +183,12 @@ function isPlaceholderMonster(monster) {
     && Number(status.charisma || 0) === 0;
 }
 
-function saveData() {
+function saveData(monsters = state.monsters) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     source: 'local',
     version: '1.0',
     monsterDataVersion: window.MONSTER_DATA_VERSION,
-    monsters: state.monsters
+    monsters
   }, null, 2));
 }
 
@@ -198,7 +198,7 @@ function setDataTransferStatus(message, isError = false) {
   status.classList.toggle('error', isError);
 }
 
-function exportMonsterData() {
+function exportMonsterData(filename = `dungeon-within-monsters-${new Date().toISOString().slice(0, 10)}.json`) {
   collectMonsterFromForm();
   const data = {
     source: 'local',
@@ -211,12 +211,62 @@ function exportMonsterData() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `dungeon-within-monsters-${new Date().toISOString().slice(0, 10)}.json`;
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   setDataTransferStatus(`${state.monsters.length}体のモンスター情報をエクスポートしました。`);
+}
+
+function refreshLatestMonsterData() {
+  const replacementRanks = '5〜9';
+  const confirmed = window.confirm(
+    `等級${replacementRanks}の情報を最新データで置き換えます。` +
+    'このブラウザーで編集した等級5〜9の内容は上書きされ、等級1〜4など他の等級は保持されます。' +
+    '続行すると、現在の全データを先にバックアップとしてエクスポートします。'
+  );
+  if (!confirmed) return;
+
+  try {
+    collectMonsterFromForm();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    exportMonsterData(`dungeon-within-monsters-backup-before-update-${timestamp}.json`);
+  } catch (error) {
+    console.error('Monster data backup export failed.', error);
+    setDataTransferStatus(`バックアップのエクスポートに失敗したため、更新を中止しました：${error.message}`, true);
+    return;
+  }
+
+  if (!window.confirm('バックアップのダウンロードを開始しました。ファイルが保存されたことを確認してから、最新データを反映しますか？')) {
+    setDataTransferStatus('更新を中止しました。現在のモンスターデータは変更されていません。');
+    return;
+  }
+
+  try {
+    const currentData = {
+      source: 'local',
+      version: '1.0',
+      monsterDataVersion: window.MONSTER_DATA_VERSION,
+      monsters: state.monsters
+    };
+    const updatedData = window.mergeMonsterData(currentData, { forceRefresh: true });
+    const selectedMonster = state.monsters[state.selectedMonsterIndex];
+    const selectedIndex = selectedMonster
+      ? updatedData.monsters.findIndex((monster) =>
+        monster.name === selectedMonster.name && Number(monster.rank) === Number(selectedMonster.rank)
+      )
+      : 0;
+
+    saveData(updatedData.monsters);
+    state.monsters = updatedData.monsters;
+    state.selectedMonsterIndex = Math.max(0, selectedIndex);
+    renderSelectedMonster();
+    setDataTransferStatus(`更新完了：等級5〜9の最新データを反映し、${updatedData.monsters.length}体の情報を保存しました。`);
+  } catch (error) {
+    console.error('Latest monster data refresh failed.', error);
+    setDataTransferStatus(`最新データの反映に失敗しました：${error.message}`, true);
+  }
 }
 
 function validateImportedMonsterData(data) {
@@ -986,7 +1036,8 @@ function bindForm() {
     alert('保存しました。');
   });
 
-  document.getElementById('export-monster-data').addEventListener('click', exportMonsterData);
+  document.getElementById('export-monster-data').addEventListener('click', () => exportMonsterData());
+  document.getElementById('refresh-latest-monster-data').addEventListener('click', refreshLatestMonsterData);
 
   const importFileInput = document.getElementById('import-monster-file');
   document.getElementById('import-monster-data').addEventListener('click', () => {
