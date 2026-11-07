@@ -326,7 +326,7 @@ window.RANK9_DATA = {
                      },
                      {
                          "name":  "超越体",
-                         "race":  "異形",
+                         "race":  "精霊",
                          "rank":  9,
                          "control_cost":  25,
                          "status":  {
@@ -517,7 +517,7 @@ window.RANK9_DATA = {
                      },
                      {
                          "name":  "フュシス",
-                         "race":  "植物",
+                         "race":  "アンデッド",
                          "rank":  9,
                          "control_cost":  25,
                          "status":  {
