@@ -616,9 +616,9 @@ window.RANK9_DATA = {
 
 window.MONSTER_DATA_VERSION = '0.5.4(b.187)-english-wiki-rank5-rank6-rank7-rank8-rank9-2026-11-06-v1';
 
-window.mergeMonsterData = function (data) {
+window.mergeMonsterData = function (data, { forceRefresh = false } = {}) {
   const base = data && Array.isArray(data.monsters) ? data : { monsters: [] };
-  if (base.monsterDataVersion === window.MONSTER_DATA_VERSION) {
+  if (!forceRefresh && base.monsterDataVersion === window.MONSTER_DATA_VERSION) {
     return base;
   }
 
