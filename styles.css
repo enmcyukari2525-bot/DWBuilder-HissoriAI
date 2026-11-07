@@ -327,6 +327,10 @@ h1 {
 .monster-list {
   display: grid;
   gap: 10px;
+  max-height: clamp(180px, calc(100vh - 260px), 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;
 }
 
 .monster-list-item {

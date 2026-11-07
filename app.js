@@ -664,11 +664,14 @@ function getFilteredMonsters() {
     return matchesRace && matchesRank && matchesStats;
   });
 
-  if (rosterFilters.stats.length === 0) {
-    return visible;
-  }
+  return visible.sort((a, b) => {
+    if (rosterFilters.stats.length > 0) {
+      const scoreDifference = getRecommendedMatchScore(b) - getRecommendedMatchScore(a);
+      if (scoreDifference !== 0) return scoreDifference;
+    }
 
-  return visible.sort((a, b) => getRecommendedMatchScore(b) - getRecommendedMatchScore(a));
+    return Number(b.rank || 0) - Number(a.rank || 0);
+  });
 }
 
 let partCatalog = buildPartCatalog();
