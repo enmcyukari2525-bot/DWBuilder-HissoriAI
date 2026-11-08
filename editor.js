@@ -219,7 +219,50 @@ function exportMonsterData(filename = `dungeon-within-monsters-${new Date().toIS
   setDataTransferStatus(`${state.monsters.length}体のモンスター情報をエクスポートしました。`);
 }
 
-function refreshLatestMonsterData() {
+async function loadLatestMonsterDataScripts() {
+  if (!['http:', 'https:'].includes(window.location.protocol)) {
+    throw new Error('サーバーから最新データを取得するには、GitHub Pagesなどのhttp://またはhttps://のURLで開いてください。');
+  }
+
+  const dataFiles = [
+    ['RANK5_DATA', 'rank5-data.js', 5],
+    ['RANK6_DATA', 'rank6-data.js', 6],
+    ['RANK7_DATA', 'rank7-data.js', 7],
+    ['RANK8_DATA', 'rank8-data.js', 8],
+    ['RANK9_DATA', 'rank9-data.js', 9]
+  ];
+  const originalData = Object.fromEntries(dataFiles.map(([key]) => [key, window[key]]));
+  const originalVersion = window.MONSTER_DATA_VERSION;
+  const originalMerge = window.mergeMonsterData;
+  const cacheBuster = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  try {
+    for (const [key, file, expectedRank] of dataFiles) {
+      const url = new URL(`${file}?refresh=${cacheBuster}`, document.baseURI);
+      await import(url.href);
+
+      const dataset = window[key];
+      if (!dataset || Number(dataset.rank) !== expectedRank
+        || !Array.isArray(dataset.monsters) || dataset.monsters.length === 0
+        || !dataset.monsters.every((monster) => Number(monster.rank) === expectedRank)) {
+        throw new Error(`${file}から有効な${expectedRank}等級データを読み込めませんでした。`);
+      }
+    }
+
+    if (typeof window.mergeMonsterData !== 'function' || !window.MONSTER_DATA_VERSION) {
+      throw new Error('最新のデータ統合処理を読み込めませんでした。');
+    }
+  } catch (error) {
+    dataFiles.forEach(([key]) => {
+      window[key] = originalData[key];
+    });
+    window.MONSTER_DATA_VERSION = originalVersion;
+    window.mergeMonsterData = originalMerge;
+    throw error;
+  }
+}
+
+async function refreshLatestMonsterData() {
   const replacementRanks = '5〜9';
   const confirmed = window.confirm(
     `等級${replacementRanks}の情報を最新データで置き換えます。` +
@@ -243,7 +286,13 @@ function refreshLatestMonsterData() {
     return;
   }
 
+  const refreshButton = document.getElementById('refresh-latest-monster-data');
+  refreshButton.disabled = true;
+  setDataTransferStatus('サーバーから最新データを取得しています…');
+
   try {
+    await loadLatestMonsterDataScripts();
+
     const currentData = {
       source: 'local',
       version: '1.0',
@@ -266,6 +315,8 @@ function refreshLatestMonsterData() {
   } catch (error) {
     console.error('Latest monster data refresh failed.', error);
     setDataTransferStatus(`最新データの反映に失敗しました：${error.message}`, true);
+  } finally {
+    refreshButton.disabled = false;
   }
 }
 
