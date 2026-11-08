@@ -14,15 +14,15 @@ window.RANK7_DATA = {
       vulnerabilities: [],
       basic_attack: {
         name: '基本斬撃',
-        damage: '4d6+3+筋力',
+        damage: '4d6+3 筋力補正',
         damage_type: '物理',
         description: '敵を斬る。',
         tags: ['主行動', '筋力基準', '近接', '筋力命中ロール']
       },
       unique_trait: {
         name: '不死の肉体',
-        description: '侵攻開始時に変異を3スタック、交戦開始時に変異を1スタック獲得する。',
-        bonuses: ['毒状態免疫', 'クリティカル免疫'],
+        description: '侵攻開始時に変異を3スタック得ます。6秒ごとに変異を１スタック得ます。変異：筋力と敏捷がスタック数だけ増加し、知力と判断力がスタック数だけ減少する。（最大スタック数：10)',
+        bonuses: ['状態異常免疫 中毒', '特性獲得 クリティカル免疫'],
         tags: []
       },
       parts: {
@@ -103,7 +103,7 @@ window.RANK7_DATA = {
       }
     },
     {
-      name: 'ファイア・ロード',
+      name: '炎の君主',
       race: '精霊',
       rank: 7,
       control_cost: 12,
@@ -412,7 +412,7 @@ window.RANK7_DATA = {
       }
     },
     {
-      name: 'ウォーター・ロード',
+      name: '水の君主',
       race: '精霊',
       rank: 7,
       control_cost: 12,
@@ -464,7 +464,7 @@ window.RANK7_DATA = {
       }
     },
     {
-      name: 'ウィンド・ロード',
+      name: '嵐の君主',
       race: '精霊',
       rank: 7,
       control_cost: 12,
