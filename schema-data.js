@@ -507,6 +507,9 @@
     storageKey: STORAGE_KEY,
     initialize,
     reload,
+    prepare(data) {
+      return hydrateLegacyStructuredFields(data);
+    },
     save,
     validate: validateSchema,
     get schema() {

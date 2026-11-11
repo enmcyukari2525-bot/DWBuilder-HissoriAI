@@ -925,7 +925,7 @@ function save() {
   }
 }
 
-function exportData() {
+function exportData(filename = 'dungeon-within-data-v1.json') {
   const data = {
     schema_version: schema.schema_version,
     dataset_revision: schema.dataset_revision,
@@ -941,10 +941,119 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'dungeon-within-data-v1.json';
+  link.download = filename;
   link.click();
   URL.revokeObjectURL(url);
   setStatus('新スキーマのデータをエクスポートしました。');
+}
+
+async function fetchLatestJson(path, cacheBuster) {
+  const url = new URL(path, document.baseURI);
+  url.searchParams.set('refresh', cacheBuster);
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`${path}を取得できませんでした（HTTP ${response.status}）。`);
+  return response.json();
+}
+
+function mergeLatestRegistry(latestRegistry) {
+  const merged = JSON.parse(JSON.stringify(latestRegistry));
+  Object.entries(currentRegistry()).forEach(([category, entries]) => {
+    if (!Array.isArray(entries)) return;
+    const target = merged[category] || (merged[category] = []);
+    const ids = new Set(target.map((entry) => entry.id));
+    entries.forEach((entry) => {
+      if (entry?.unclassified && !ids.has(entry.id)) {
+        target.push(entry);
+        ids.add(entry.id);
+      }
+    });
+  });
+  return merged;
+}
+
+async function refreshLatestData() {
+  const confirmed = window.confirm(
+    'サーバー上の最新マスターで等級5〜9のデータを置き換えます。' +
+    '同ランクのローカル編集・追加データは置き換わりますが、等級1〜4と独自語彙は保持します。' +
+    '続行前に現在の全データをバックアップとしてエクスポートします。'
+  );
+  if (!confirmed) return;
+
+  try {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    exportData(`dungeon-within-data-backup-before-update-${timestamp}.json`);
+    const backupConfirmed = window.confirm(
+      'バックアップのダウンロードを開始しました。ファイルが保存されたことを確認してから続行してください。'
+    );
+    if (!backupConfirmed) {
+      setStatus('更新を中止しました。現在のデータは変更されていません。');
+      return;
+    }
+
+    const button = document.getElementById('refresh-latest-monster-data');
+    button.disabled = true;
+    setStatus('サーバーから最新マスターデータを取得しています…');
+    const cacheBuster = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const [monstersDocument, partsDocument, latestRegistry] = await Promise.all([
+      fetchLatestJson('data/monsters.json', cacheBuster),
+      fetchLatestJson('data/parts.json', cacheBuster),
+      fetchLatestJson('data/tags_registry.json', cacheBuster)
+    ]);
+
+    const latestMonsters = monstersDocument.monsters.filter((monster) =>
+      Number(monster.rank) >= 5 && Number(monster.rank) <= 9
+    );
+    const latestMonsterIds = new Set(latestMonsters.map((monster) => monster.id));
+    const latestParts = partsDocument.parts.filter((part) => latestMonsterIds.has(part.source_monster));
+    const replacedIds = new Set([
+      ...schema.monsters.filter((monster) => Number(monster.rank) >= 5 && Number(monster.rank) <= 9)
+        .map((monster) => monster.id),
+      ...latestMonsterIds
+    ]);
+    const updatedSchema = {
+      ...schema,
+      schema_version: monstersDocument.schema_version || schema.schema_version,
+      game_version: monstersDocument.game_version || schema.game_version,
+      source_dataset_version: monstersDocument.source_dataset_version || schema.source_dataset_version,
+      dataset_revision: monstersDocument.dataset_revision || partsDocument.dataset_revision || schema.dataset_revision,
+      source: monstersDocument.source || schema.source,
+      reference_source: monstersDocument.reference_source || schema.reference_source,
+      tags_registry: mergeLatestRegistry(latestRegistry),
+      monsters: [
+        ...latestMonsters,
+        ...schema.monsters.filter((monster) => !replacedIds.has(monster.id))
+      ],
+      parts: [
+        ...latestParts,
+        ...schema.parts.filter((part) => !replacedIds.has(part.source_monster))
+      ]
+    };
+
+    [5, 6, 7, 8, 9].forEach((rank) => {
+      if (!latestMonsters.some((monster) => Number(monster.rank) === rank)) {
+        throw new Error(`最新マスターに等級${rank}のモンスターがありません。`);
+      }
+    });
+    window.MonsterSchema.prepare(updatedSchema);
+    window.MonsterSchema.validate(updatedSchema);
+    const savedSchema = window.MonsterSchema.save(updatedSchema);
+    Object.assign(schema, savedSchema);
+    selectedMonsterId = schema.monsters.some((monster) => monster.id === selectedMonsterId)
+      ? selectedMonsterId
+      : schema.monsters[0]?.id || null;
+    for (const id of newMonsterIds) {
+      if (!schema.monsters.some((monster) => monster.id === id)) newMonsterIds.delete(id);
+    }
+    dirty = false;
+    render();
+    setStatus(`更新完了：最新データを反映しました（${latestMonsters.length}体、${latestParts.length}パーツ）。`);
+  } catch (error) {
+    console.error('Latest schema data refresh failed.', error);
+    setStatus(`最新データの反映に失敗しました：${error.message}`, true);
+  } finally {
+    const button = document.getElementById('refresh-latest-monster-data');
+    if (button) button.disabled = false;
+  }
 }
 
 async function importData(file) {
@@ -993,6 +1102,7 @@ document.getElementById('new-monster-form').addEventListener('submit', (event) =
 });
 document.getElementById('save-monster-data').addEventListener('click', save);
 document.getElementById('export-monster-data').addEventListener('click', exportData);
+document.getElementById('refresh-latest-monster-data').addEventListener('click', refreshLatestData);
 document.getElementById('import-monster-data').addEventListener('click', () => {
   document.getElementById('import-monster-file').click();
 });
