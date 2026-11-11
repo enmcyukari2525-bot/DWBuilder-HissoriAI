@@ -19,62 +19,35 @@
       </header>
 
       <main class="layout">
-        <section class="panel roster-panel">
-          <div class="panel-header">
-            <h2>モンスター一覧</h2>
-            <span id="roster-count" class="badge">0体</span>
-          </div>
-          <div class="roster-filters">
-            <label class="filter-control">
-              <span>種族</span>
-              <select id="race-filter">
-                <option value="all">すべて</option>
-              </select>
-            </label>
-            <label class="filter-control">
-              <span>等級</span>
-              <select id="rank-filter">
-                <option value="all">すべて</option>
-              </select>
-            </label>
-          </div>
-          <div class="stat-filter-box">
-            <div class="stat-filter-label">ステータス</div>
-            <div id="stat-filter-list" class="stat-filter-list"></div>
-          </div>
-          <div id="unit-list" class="unit-list"></div>
-        </section>
-
         <section class="panel team-panel">
           <div class="panel-header">
             <h2>現在の編成</h2>
-            <button id="clear-btn" class="ghost-btn">クリア</button>
+            <div class="team-header-actions">
+              <button id="open-monster-picker" type="button" class="primary-btn">モンスターを追加</button>
+              <button id="clear-btn" class="ghost-btn">クリア</button>
+            </div>
           </div>
 
           <div class="summary-grid">
-            <div class="summary-item">
-              <span>総合力</span>
-              <strong id="team-score">0</strong>
-            </div>
-            <div class="summary-item">
-              <span>役割バランス</span>
-              <strong id="team-balance">0</strong>
-            </div>
-            <div class="summary-item">
-              <span>相性</span>
-              <strong id="team-synergy">0</strong>
-            </div>
             <div class="summary-item">
               <span>支配力</span>
               <strong id="team-control">0</strong>
             </div>
           </div>
 
-          <div class="formation-saves">
-            <h3>保存編成（最大3件）</h3>
+          <section class="balance-summary" aria-label="バランスサマリ">
+            <h3>バランスサマリ</h3>
+            <div class="balance-charts">
+              <div id="status-balance"></div>
+              <div id="skill-balance"></div>
+            </div>
+          </section>
+
+          <details class="formation-saves" open>
+            <summary>保存編成（最大3件）</summary>
             <div id="formation-save-list" class="formation-save-list"></div>
             <p id="formation-save-status" class="formation-save-status" role="status" aria-live="polite"></p>
-          </div>
+          </details>
 
           <div id="team-list" class="team-list"></div>
         </section>
@@ -98,6 +71,40 @@
         </section>
       </main>
     </div>
+
+    <dialog id="monster-picker" class="monster-picker" aria-labelledby="monster-picker-title">
+      <div class="modal-header">
+        <h3 id="monster-picker-title">モンスターを追加</h3>
+        <button id="close-monster-picker" type="button" class="close-btn">閉じる</button>
+      </div>
+      <div class="monster-picker-columns">
+        <section class="monster-picker-selected" aria-labelledby="monster-picker-team-title">
+          <h4 id="monster-picker-team-title">現在の編成</h4>
+          <div id="monster-picker-team" class="team-list"></div>
+        </section>
+        <section class="monster-picker-roster" aria-labelledby="monster-picker-roster-title">
+          <div class="panel-header">
+            <h4 id="monster-picker-roster-title">モンスター一覧</h4>
+            <span id="roster-count" class="badge">0体</span>
+          </div>
+          <div class="roster-filters">
+            <label class="filter-control">
+              <span>種族</span>
+              <select id="race-filter"><option value="all">すべて</option></select>
+            </label>
+            <label class="filter-control">
+              <span>等級</span>
+              <select id="rank-filter"><option value="all">すべて</option></select>
+            </label>
+          </div>
+          <div class="stat-filter-box">
+            <div class="stat-filter-label">ステータス</div>
+            <div id="stat-filter-list" class="stat-filter-list"></div>
+          </div>
+          <div id="unit-list" class="unit-list"></div>
+        </section>
+      </div>
+    </dialog>
 
     <script src="app-version.js"></script>
     <script src="schema-data.js"></script>

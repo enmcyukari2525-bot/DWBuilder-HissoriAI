@@ -518,10 +518,6 @@ function getSelectedMonsters() {
   return selectedIds.map((teamId) => teamMemberMap.get(teamId)).filter(Boolean);
 }
 
-function getSelectedCountForMonster(baseMonsterId) {
-  return selectedIds.filter((teamId) => teamMemberMap.get(teamId)?.baseMonsterId === baseMonsterId).length;
-}
-
 function createTeamMember(monster) {
   const clone = JSON.parse(JSON.stringify(monster));
   const teamId = createTeamMemberId();
@@ -1148,6 +1144,7 @@ function renderUnitList() {
   const unitList = document.getElementById('unit-list');
   const rosterCount = document.getElementById('roster-count');
   const visibleMonsters = getFilteredMonsters();
+  const scrollTop = unitList.scrollTop;
 
   rosterCount.textContent = `${visibleMonsters.length}体`;
 
@@ -1159,7 +1156,6 @@ function renderUnitList() {
   unitList.innerHTML = '';
 
   visibleMonsters.forEach((monster) => {
-    const selected = getSelectedCountForMonster(monster.id) > 0;
     const active = activeMonsterState.monsterId === monster.id || (teamMemberMap.has(activeMonsterState.monsterId) && teamMemberMap.get(activeMonsterState.monsterId)?.baseMonsterId === monster.id);
     const card = document.createElement('div');
     card.className = `unit-card ${active ? 'active' : ''}`;
@@ -1195,7 +1191,7 @@ function renderUnitList() {
 
     const action = document.createElement('div');
     const button = document.createElement('button');
-    button.className = selected ? 'add-btn' : 'add-btn';
+    button.className = 'add-btn';
     button.textContent = '追加';
     button.disabled = false;
     button.addEventListener('click', () => {
@@ -1207,20 +1203,110 @@ function renderUnitList() {
     card.appendChild(action);
     unitList.appendChild(card);
   });
+  unitList.scrollTop = scrollTop;
 }
 
-function renderTeam() {
-  const teamList = document.getElementById('team-list');
-  const selectedMonsters = getSelectedMonsters();
-  const score = scoreTeam(selectedMonsters);
+function getSkillCategories(ability) {
+  const categories = new Set();
+  if (!ability) return categories;
 
-  const totalControl = selectedMonsters.reduce((sum, monster) => sum + (monster.controlCost || 0), 0);
+  const tags = Array.isArray(ability.tags) ? ability.tags : [];
+  const structured = ability.structured || {};
+  const ranges = [structured.range, structured.delivery];
+  if (tags.includes('近接') || ranges.includes('melee') || ranges.includes('近接')) categories.add('melee');
+  if (tags.includes('遠距離') || ranges.includes('ranged') || ranges.includes('遠距離')) categories.add('ranged');
+  const semanticEffects = Array.isArray(ability.semantic?.effects) ? ability.semantic.effects : [];
+  const damage = Array.isArray(structured.damage) ? structured.damage : [];
+  const scopes = [structured.target_scope, ...semanticEffects.map((effect) => effect?.scope)];
+  if (tags.includes('単体') || scopes.includes('target')) categories.add('single');
+  if (tags.includes('範囲') || scopes.some((scope) =>
+    ['ally_all', 'ally_row', 'enemy_all', 'enemy_row', 'enemy_front', 'adjacent', 'dungeon', 'all_enemies'].includes(scope)
+  )) categories.add('area');
+  if (tags.includes('回復') || semanticEffects.some((effect) => effect?.kind === 'heal')
+    || damage.some((entry) => entry?.type === 'heal' || entry?.type === 'custom:回復')) {
+    categories.add('heal');
+  }
+  return categories;
+}
 
-  document.getElementById('team-score').textContent = score.total;
-  document.getElementById('team-balance').textContent = score.balance;
-  document.getElementById('team-synergy').textContent = score.synergy;
-  document.getElementById('team-control').textContent = totalControl;
+function renderRadarChart(containerId, title, labels, values, description) {
+  const container = document.getElementById(containerId);
+  const center = 150;
+  const radius = 95;
+  const maxValue = Math.max(1, ...values);
+  const point = (index, fraction) => {
+    const angle = -Math.PI / 2 + 2 * Math.PI * index / labels.length;
+    return `${(center + Math.cos(angle) * radius * fraction).toFixed(2)},${(center + Math.sin(angle) * radius * fraction).toFixed(2)}`;
+  };
+  const grid = [0.25, 0.5, 0.75, 1].map((level) =>
+    `<polygon class="radar-grid" points="${labels.map((_, index) => point(index, level)).join(' ')}"></polygon>`
+  ).join('');
+  const axes = labels.map((_, index) => {
+    const [x, y] = point(index, 1).split(',');
+    return `<line class="radar-axis" x1="${center}" y1="${center}" x2="${x}" y2="${y}"></line>`;
+  }).join('');
+  const data = labels.map((_, index) => point(index, Math.max(0, values[index]) / maxValue)).join(' ');
+  const chartLabels = labels.map((label, index) => {
+    const [x, y] = point(index, 1.24).split(',');
+    return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle">${escapeHtml(label)} ${escapeHtml(values[index])}</text>`;
+  }).join('');
+  const chartDescription = labels.map((label, index) => `${label}: ${values[index]}`).join('、');
 
+  container.innerHTML = `
+    <article class="balance-chart">
+      <h4>${escapeHtml(title)}</h4>
+      <svg class="radar-chart" viewBox="-35 0 370 300" role="img" aria-label="${escapeHtml(`${title}。${chartDescription}`)}">
+        ${grid}${axes}<polygon class="radar-data" points="${data}"></polygon>${chartLabels}
+      </svg>
+      <p class="balance-help">${escapeHtml(description)}</p>
+    </article>
+  `;
+}
+
+function renderBalanceSummary(team) {
+  const statKeys = ['hp', ...abilityOrder];
+  const totals = statKeys.map(() => 0);
+  const skillCounts = { melee: 0, ranged: 0, heal: 0, single: 0, area: 0 };
+
+  team.forEach((monster) => {
+    const status = getEffectiveMonsterStatus(monster.id) || monster.status;
+    statKeys.forEach((key, index) => {
+      totals[index] += Number(status[key]) || 0;
+    });
+    const equipped = getEquippedParts(monster.id);
+    const parts = [equipped.main, ...equipped.sub]
+      .map((id) => partCatalog.find((part) => part.id === id))
+      .filter(Boolean);
+    parts.forEach((part) => {
+      totals[0] += (Number(part.stat_bonus?.hp) || 0) + (Number(part.stat_bonus?.max_hp) || 0);
+    });
+    const baseMonster = monsters.find((entry) => entry.id === monster.baseMonsterId && entry.name === monster.name);
+    const abilities = ['basicAttack', 'trait'].map((key) => {
+      const saved = monster[key];
+      const current = baseMonster?.[key];
+      if (!saved || !current || saved.name !== current.name) return saved;
+      return {
+        ...saved,
+        structured: saved.structured ?? current.structured,
+        semantic: saved.semantic ?? current.semantic
+      };
+    });
+    [...abilities, ...parts].forEach((ability) => {
+      getSkillCategories(ability).forEach((category) => { skillCounts[category] += 1; });
+    });
+  });
+
+  renderRadarChart('status-balance', 'ステータスバランス',
+    ['HP', ...abilityOrder.map(formatAbilityName)], totals,
+    '装備中パーツの補正を含む合計。全軸共通の目盛りで、最大値を外周に合わせています。');
+  renderRadarChart('skill-balance', '技範囲バランス',
+    ['近接', '遠距離', '回復', '単体', '範囲'],
+    [skillCounts.melee, skillCounts.ranged, skillCounts.heal, skillCounts.single, skillCounts.area],
+    '基本攻撃・固有特性・装備中パーツを集計。タグや構造化情報で判定できない技は含みません。');
+}
+
+function renderTeamList(teamList, selectedMonsters) {
+  const scrollTop = teamList.scrollTop;
   if (selectedMonsters.length === 0) {
     teamList.innerHTML = '<div class="empty-team">編成を選んでください。</div>';
     return;
@@ -1248,6 +1334,16 @@ function renderTeam() {
     });
     teamList.appendChild(item);
   });
+  teamList.scrollTop = scrollTop;
+}
+
+function renderTeam() {
+  const selectedMonsters = getSelectedMonsters();
+  const totalControl = selectedMonsters.reduce((sum, monster) => sum + (monster.controlCost || 0), 0);
+  document.getElementById('team-control').textContent = totalControl;
+  renderBalanceSummary(selectedMonsters);
+  renderTeamList(document.getElementById('team-list'), selectedMonsters);
+  renderTeamList(document.getElementById('monster-picker-team'), selectedMonsters);
 }
 
 function getPartEffectLines(part) {
@@ -1787,6 +1883,16 @@ if (suggestButton) {
 }
 
 document.getElementById('clear-btn').addEventListener('click', clearSelection);
+
+const monsterPicker = document.getElementById('monster-picker');
+document.getElementById('open-monster-picker').addEventListener('click', () => monsterPicker.showModal());
+document.getElementById('close-monster-picker').addEventListener('click', () => monsterPicker.close());
+monsterPicker.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    monsterPicker.close();
+  }
+});
 
 loadFormationSlots();
 updateView();
