@@ -228,7 +228,9 @@
       description: part.raw?.text || '',
       effects: (part.semantic?.effects || []).map((effect) => effect.label || effect.kind || ''),
       bonuses: getOriginalFields(part).bonuses || [],
-      tags: getAbilityTags(part)
+      tags: getAbilityTags(part),
+      structured: part.structured,
+      semantic: part.semantic
     };
   }
 
@@ -275,14 +277,18 @@
           ? attackDamage.find((entry) => entry.bonus)?.bonus || ''
           : attackFields.bonus || '',
         description: attack.raw?.text || '',
-        tags: getAbilityTags(attack)
+        tags: getAbilityTags(attack),
+        structured: attack.structured,
+        semantic: attack.semantic
       },
       unique_trait: {
         name: trait.name || '固有特性',
         description: trait.raw?.text || '',
         effects: (trait.semantic?.effects || []).map((effect) => effect.label || effect.kind || ''),
         bonuses: getOriginalFields(trait).bonuses || [],
-        tags: getAbilityTags(trait)
+        tags: getAbilityTags(trait),
+        structured: trait.structured,
+        semantic: trait.semantic
       },
       parts: {
         main: monsterParts.filter((part) => part.slot === 'M').map(toLegacyPart),
