@@ -3,137 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>モンスター編集</title>
+    <title>新スキーマ モンスターデータ編集</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="page-shell editor-page-shell">
       <header class="topbar">
         <div>
-          <p class="eyebrow">Monster Builder</p>
-          <h1>モンスター情報編集</h1>
+          <p class="eyebrow">Monster Builder · Schema v1.0</p>
+          <h1>モンスターデータ編集</h1>
+          <p class="app-version" data-app-version></p>
+          <p id="data-transfer-status" class="data-transfer-status" role="status" aria-live="polite"></p>
         </div>
         <div class="topbar-actions">
-          <a href="index.html" class="ghost-btn editor-link">一覧に戻る</a>
+          <a href="index.html" class="ghost-btn editor-link">ビルダーへ戻る</a>
           <button id="export-monster-data" type="button" class="ghost-btn">エクスポート</button>
-          <button id="refresh-latest-monster-data" type="button" class="ghost-btn">最新データを反映</button>
           <button id="import-monster-data" type="button" class="ghost-btn">インポート</button>
-          <button id="save-monster-data" class="primary-btn">保存</button>
+          <button id="reset-monster-data" type="button" class="ghost-btn">初期データに戻す</button>
+          <button id="save-monster-data" type="button" class="primary-btn">保存</button>
           <input id="import-monster-file" type="file" accept=".json,application/json" hidden />
         </div>
       </header>
-      <p id="data-transfer-status" class="data-transfer-status" role="status" aria-live="polite"></p>
 
       <main class="editor-layout">
         <aside class="panel editor-sidebar">
           <div class="panel-header">
             <h2>モンスター一覧</h2>
-            <button id="add-monster-btn" class="ghost-btn small-btn">追加</button>
+            <button id="add-monster-btn" type="button" class="ghost-btn small-btn">追加</button>
           </div>
           <div id="monster-list" class="monster-list"></div>
         </aside>
 
         <section class="panel editor-main">
           <div id="editor-empty" class="empty-team hidden">モンスターを選んで編集してください。</div>
-          <form id="monster-editor-form" class="editor-form hidden">
-            <div class="editor-form-grid">
-              <label>
-                <span>モンスター名</span>
-                <input id="monster-name" type="text" />
-              </label>
-              <label>
-                <span>種族</span>
-                <input id="monster-race" type="text" />
-              </label>
-              <label>
-                <span>等級</span>
-                <input id="monster-rank" type="number" min="1" />
-              </label>
-              <label>
-                <span>支配力</span>
-                <input id="monster-control-cost" type="number" min="0" />
-              </label>
-            </div>
-
-            <div class="editor-section">
-              <h3>ステータス</h3>
-              <div class="editor-form-grid six-col">
-                <label><span>HP</span><input id="status-hp" type="number" /></label>
-                <label><span>AC</span><input id="status-ac" type="number" /></label>
-                <label><span>Initiative</span><input id="status-initiative" type="number" /></label>
-                <label><span>筋力</span><input id="status-strength" type="number" /></label>
-                <label><span>敏捷力</span><input id="status-dexterity" type="number" /></label>
-                <label><span>耐久力</span><input id="status-constitution" type="number" /></label>
-                <label><span>知力</span><input id="status-intelligence" type="number" /></label>
-                <label><span>判断力</span><input id="status-wisdom" type="number" /></label>
-                <label><span>魅力</span><input id="status-charisma" type="number" /></label>
-              </div>
-            </div>
-
-            <div class="editor-section">
-              <h3>基本攻撃</h3>
-              <div class="editor-form-grid">
-                <label><span>名前</span><input id="attack-name" type="text" /></label>
-                <label><span>ダメージ</span><input id="attack-damage" type="text" /></label>
-                <label><span>属性</span><input id="attack-damage-type" type="text" /></label>
-                <label><span>補正</span><input id="attack-bonus" type="text" /></label>
-              </div>
-              <label>
-                <span>説明</span>
-                <textarea id="attack-description" rows="3"></textarea>
-              </label>
-              <label>
-                <span>タグ（改行区切り）</span>
-                <textarea id="attack-tags" rows="3"></textarea>
-              </label>
-            </div>
-
-            <div class="editor-section">
-              <h3>固有特性</h3>
-              <div class="editor-form-grid">
-                <label class="full-width"><span>名前</span><input id="trait-name" type="text" /></label>
-              </div>
-              <label>
-                <span>説明</span>
-                <textarea id="trait-description" rows="4"></textarea>
-              </label>
-              <label>
-                <span>効果（改行区切り）</span>
-                <textarea id="trait-effects" rows="4"></textarea>
-              </label>
-              <label>
-                <span>ボーナス（改行区切り）</span>
-                <textarea id="trait-bonuses" rows="3"></textarea>
-              </label>
-              <label>
-                <span>タグ（改行区切り）</span>
-                <textarea id="trait-tags" rows="3"></textarea>
-              </label>
-            </div>
-
-            <div class="editor-section">
-              <h3>パーツ</h3>
-              <div class="parts-editor-grid">
-                <div class="part-block">
-                  <h4>M枠</h4>
-                  <div id="main-parts-editor"></div>
-                </div>
-                <div class="part-block">
-                  <h4>S枠</h4>
-                  <div id="sub-parts-editor"></div>
-                </div>
-              </div>
-            </div>
-          </form>
+          <form id="monster-schema-form" class="editor-form hidden" onsubmit="return false;"></form>
         </section>
       </main>
     </div>
 
-    <script src="rank5-data.js"></script>
-    <script src="rank6-data.js"></script>
-    <script src="rank7-data.js"></script>
-    <script src="rank8-data.js"></script>
-    <script src="rank9-data.js"></script>
-    <script src="editor.js"></script>
+    <dialog id="new-monster-dialog" class="schema-new-monster-dialog">
+      <form id="new-monster-form">
+        <h2>新規モンスター</h2>
+        <p>英語名からIDを自動生成します。</p>
+        <label class="schema-field">
+          <span>英語名（必須）</span>
+          <input id="new-monster-english-name" type="text" required autocomplete="off" />
+        </label>
+        <div class="schema-dialog-actions">
+          <button id="cancel-new-monster" type="button" class="ghost-btn">キャンセル</button>
+          <button type="submit" class="primary-btn">追加</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app-version.js"></script>
+    <script src="schema-data.js"></script>
+    <script type="module">
+      try {
+        await window.MonsterSchema.initialize();
+        await import('./schema-editor.js');
+      } catch (error) {
+        console.error('Failed to initialize the schema editor.', error);
+        const status = document.getElementById('data-transfer-status');
+        status.textContent = `モンスターデータを読み込めませんでした：${error.message}`;
+        status.classList.add('error');
+      }
+    </script>
   </body>
 </html>

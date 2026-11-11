@@ -559,6 +559,7 @@ const abilityOrder = ['strength', 'dexterity', 'constitution', 'intelligence', '
 const partPickerState = {
   monsterId: null,
   slotKey: null,
+  rank: 'all',
   sortStat: null,
   sortDirection: 'desc'
 };
@@ -572,6 +573,7 @@ function buildPartCatalog() {
         id: `${monster.id}-main-${index}`,
         sourceMonsterId: monster.id,
         sourceMonsterName: monster.name,
+        rank: monster.rank,
         slot: 'main',
         ...part
       });
@@ -582,6 +584,7 @@ function buildPartCatalog() {
         id: `${monster.id}-sub-${index}`,
         sourceMonsterId: monster.id,
         sourceMonsterName: monster.name,
+        rank: monster.rank,
         slot: 'sub',
         ...part,
         slotLabel: `S${index + 1}`
@@ -882,6 +885,7 @@ function setSlotPart(monsterId, slotKey, partId) {
 function openPartPicker(monsterId, slotKey) {
   partPickerState.monsterId = monsterId;
   partPickerState.slotKey = slotKey;
+  partPickerState.rank = 'all';
   partPickerState.sortStat = null;
   partPickerState.sortDirection = 'desc';
   renderPartPicker();
@@ -911,7 +915,12 @@ function renderPartPicker() {
   }
 
   const slotLabel = partPickerState.slotKey === 'main' ? 'Mパーツ' : partPickerState.slotKey === 'sub1' ? 'S1パーツ' : 'S2パーツ';
-  const filteredParts = partCatalog.filter((part) => part.slot === (partPickerState.slotKey === 'main' ? 'main' : 'sub'));
+  const slotParts = partCatalog.filter((part) => part.slot === (partPickerState.slotKey === 'main' ? 'main' : 'sub'));
+  const rankOptions = [...new Set(slotParts.map((part) => Number(part.rank)).filter(Number.isFinite))]
+    .sort((a, b) => b - a);
+  const filteredParts = slotParts.filter((part) =>
+    partPickerState.rank === 'all' || Number(part.rank) === Number(partPickerState.rank)
+  );
   if (partPickerState.sortStat) {
     const sortStat = partPickerState.sortStat;
     const direction = partPickerState.sortDirection === 'asc' ? 1 : -1;
@@ -981,6 +990,13 @@ function renderPartPicker() {
         }).join('')}
         ${partPickerState.sortStat ? '<button type="button" class="part-sort-reset" data-role="reset-part-sort">初期順</button>' : ''}
       </div>
+      <label class="part-rank-filter">
+        <span>等級</span>
+        <select data-role="filter-parts-rank" aria-label="パーツの等級で絞り込み">
+          <option value="all"${partPickerState.rank === 'all' ? ' selected' : ''}>すべて</option>
+          ${rankOptions.map((rank) => `<option value="${rank}"${Number(partPickerState.rank) === rank ? ' selected' : ''}>${rank}等級</option>`).join('')}
+        </select>
+      </label>
       <div class="part-modal-list">
         ${cardHtml || '<div class="empty-team">装備可能なパーツがありません。</div>'}
       </div>
@@ -1006,6 +1022,11 @@ function renderPartPicker() {
   modal.querySelector('[data-role="reset-part-sort"]')?.addEventListener('click', () => {
     partPickerState.sortStat = null;
     partPickerState.sortDirection = 'desc';
+    renderPartPicker();
+  });
+
+  modal.querySelector('[data-role="filter-parts-rank"]')?.addEventListener('change', (event) => {
+    partPickerState.rank = event.currentTarget.value;
     renderPartPicker();
   });
 
@@ -1769,8 +1790,43 @@ function scheduleMonsterDataSync() {
 }
 
 window.addEventListener('storage', (event) => {
-  if (event.key === STORAGE_KEY) scheduleMonsterDataSync();
+  if (event.key === STORAGE_KEY) {
+    scheduleMonsterDataSync();
+    return;
+  }
+  if (event.key === window.MonsterSchema?.storageKey) {
+    syncSchemaDataFromStorage();
+  }
 });
+
+function syncSchemaDataFromStorage() {
+  try {
+    window.MonsterSchema.reload();
+    const stored = loadMonsterData();
+    const updatedData = window.mergeMonsterData(stored || { monsters: [] });
+    latestMonsterData = JSON.stringify(updatedData);
+    monsters = mapMonsterData(updatedData);
+    partCatalog = buildPartCatalog();
+
+    selectedIds.forEach((teamId) => {
+      const member = teamMemberMap.get(teamId);
+      const baseMonster = monsters.find((monster) => monster.id === member?.baseMonsterId);
+      if (!member || !baseMonster) return;
+      teamMemberMap.set(teamId, {
+        ...baseMonster,
+        id: teamId,
+        baseMonsterId: baseMonster.id
+      });
+    });
+
+    updateView();
+  } catch (error) {
+    console.error('Failed to sync the monster dataset from storage.', error);
+    const status = document.getElementById('schema-load-status');
+    status.textContent = `新スキーマの同期に失敗しました：${error.message}`;
+    status.classList.add('error');
+  }
+}
 
 window.addEventListener('pageshow', scheduleMonsterDataSync);
 window.addEventListener('focus', scheduleMonsterDataSync);
