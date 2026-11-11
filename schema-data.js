@@ -215,6 +215,10 @@
     return {};
   }
 
+  function getAbilityTags(ability) {
+    return [...new Set([...(ability.raw?.wiki_tags || []), ...(ability.custom_tags || [])])];
+  }
+
   function toLegacyPart(part) {
     return {
       name: part.name,
@@ -224,7 +228,7 @@
       description: part.raw?.text || '',
       effects: (part.semantic?.effects || []).map((effect) => effect.label || effect.kind || ''),
       bonuses: getOriginalFields(part).bonuses || [],
-      tags: part.raw?.wiki_tags || []
+      tags: getAbilityTags(part)
     };
   }
 
@@ -271,14 +275,14 @@
           ? attackDamage.find((entry) => entry.bonus)?.bonus || ''
           : attackFields.bonus || '',
         description: attack.raw?.text || '',
-        tags: attack.raw?.wiki_tags || []
+        tags: getAbilityTags(attack)
       },
       unique_trait: {
         name: trait.name || '固有特性',
         description: trait.raw?.text || '',
         effects: (trait.semantic?.effects || []).map((effect) => effect.label || effect.kind || ''),
         bonuses: getOriginalFields(trait).bonuses || [],
-        tags: trait.raw?.wiki_tags || []
+        tags: getAbilityTags(trait)
       },
       parts: {
         main: monsterParts.filter((part) => part.slot === 'M').map(toLegacyPart),
@@ -386,6 +390,10 @@
       || !ability.game_version || !ability.confidence
       || !ability.raw || typeof ability.raw.text !== 'string' || !ability.raw.source) {
       throw new Error(`${ability?.id || '能力'}に必須のraw・出典・版情報がありません。`);
+    }
+    if (ability.custom_tags !== undefined
+      && (!Array.isArray(ability.custom_tags) || ability.custom_tags.some((tag) => typeof tag !== 'string'))) {
+      throw new Error(`${ability.id}のカスタムタグは文字列の配列で入力してください。`);
     }
     if (ids.has(ability.id)) throw new Error(`能力IDが重複しています：${ability.id}`);
     ids.add(ability.id);

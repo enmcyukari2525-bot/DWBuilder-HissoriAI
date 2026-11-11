@@ -3897,134 +3897,155 @@
                               }
                   },
                   {
-                      "id":  "rank9_03_enmeria_M",
-                      "name":  "三界の嵐",
-                      "kind":  "part",
-                      "slot":  "M",
-                      "source_monster":  "rank9_03_enmeria",
-                      "control_cost_bonus":  8,
-                      "game_version":  "0.5.4",
-                      "confidence":  "unverified",
-                      "raw":  {
-                                  "text":  "火炎・冷気・電撃のトリプルエレメンタルストームを放ち、敵全体を壊滅させる。",
-                                  "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                  "wiki_tags":  [
-                                                    "主行動",
-                                                    "判断力基準",
-                                                    "呪文",
-                                                    "範囲",
-                                                    "敏捷力セーヴ"
-                                                ],
-                                  "original_fields":  {
-                                                          "control_cost_bonus":  8,
-                                                          "stat_bonus":  {
-                                                                             "wisdom":  4
-                                                                         },
-                                                          "damage":  [
-                                                                         {
-                                                                             "dice":  "4d10",
-                                                                             "bonus":  "判断力修正値",
-                                                                             "damage_type":  "火炎"
-                                                                         },
-                                                                         {
-                                                                             "dice":  "4d10",
-                                                                             "bonus":  "判断力修正値",
-                                                                             "damage_type":  "冷気"
-                                                                         },
-                                                                         {
-                                                                             "dice":  "4d10",
-                                                                             "bonus":  "判断力修正値",
-                                                                             "damage_type":  "電撃"
-                                                                         }
-                                                                     ]
-                                                      }
-                              },
-                      "structured":  {
-                                         "action_type":  "main_action",
-                                         "delivery":  "spell",
-                                         "base_stat":  "wis",
-                                         "stat_bonus":  {
-                                                            "wis":  4
-                                                        },
-                                         "damage":  [
-                                                        {
-                                                            "dice":  "4d10",
-                                                            "bonus_stat":  "wis",
-                                                            "type":  "fire"
-                                                        },
-                                                        {
-                                                            "dice":  "4d10",
-                                                            "bonus_stat":  "wis",
-                                                            "type":  "cold"
-                                                        },
-                                                        {
-                                                            "dice":  "4d10",
-                                                            "bonus_stat":  "wis",
-                                                            "type":  "lightning"
-                                                        }
-                                                    ]
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_03_enmeria_M",
+                    "name": "万物の調和",
+                    "kind": "part",
+                    "slot": "M",
+                    "source_monster": "rank9_03_enmeria",
+                    "control_cost_bonus": 12,
+                    "game_version": "0.7.4",
+                    "confidence": "unverified",
+                    "raw": {
+                      "text": "6d8　火炎ダメージ(+知力修正値)\n+6d8　冷気ダメージ(+魅力修正値)\n+6d8　電撃ダメージ(+判断力修正値)",
+                      "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                      "wiki_tags": [
+                        "主行動",
+                        "魅力基準",
+                        "呪文",
+                        "遠距離",
+                        "範囲",
+                        "敏捷力セーヴ（判断力基準）",
+                        "CD 14秒"
+                      ],
+                      "original_fields": {
+                        "control_cost_bonus": 8,
+                        "stat_bonus": {
+                          "wisdom": 4
+                        },
+                        "damage": [
+                          {
+                            "dice": "4d10",
+                            "bonus": "判断力修正値",
+                            "damage_type": "火炎"
+                          },
+                          {
+                            "dice": "4d10",
+                            "bonus": "判断力修正値",
+                            "damage_type": "冷気"
+                          },
+                          {
+                            "dice": "4d10",
+                            "bonus": "判断力修正値",
+                            "damage_type": "電撃"
+                          }
+                        ]
+                      }
+                    },
+                    "structured": {
+                      "action_type": "main_action",
+                      "delivery": "spell",
+                      "base_stat": "wis",
+                      "stat_bonus": {
+                        "wis": 5
+                      },
+                      "damage": [
+                        {
+                          "dice": "6d8",
+                          "bonus_stat": "int",
+                          "type": "fire"
+                        },
+                        {
+                          "dice": "6d8",
+                          "bonus_stat": "cha",
+                          "type": "cold"
+                        },
+                        {
+                          "dice": "6d8",
+                          "bonus_stat": "wis",
+                          "type": "lightning"
+                        }
+                      ]
+                    },
+                    "ext": {}
                   },
                   {
-                      "id":  "rank9_03_enmeria_S1",
-                      "name":  "元素調和",
-                      "kind":  "part",
-                      "slot":  "S1",
-                      "source_monster":  "rank9_03_enmeria",
-                      "control_cost_bonus":  4,
-                      "game_version":  "0.5.4",
-                      "confidence":  "unverified",
-                      "raw":  {
-                                  "text":  "味方が元素属性呪文を唱えるたび、敵全体に元素共鳴スタックを付与して被ダメージを増加させる。",
-                                  "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                  "original_fields":  {
-                                                          "control_cost_bonus":  4,
-                                                          "stat_bonus":  {
-                                                                             "intelligence":  2,
-                                                                             "wisdom":  2
-                                                                         }
-                                                      }
-                              },
-                      "structured":  {
-                                         "stat_bonus":  {
-                                                            "int":  2,
-                                                            "wis":  2
-                                                        }
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_03_enmeria_S1",
+                    "name": "精霊の君臨",
+                    "kind": "part",
+                    "slot": "S1",
+                    "source_monster": "rank9_03_enmeria",
+                    "control_cost_bonus": 6,
+                    "game_version": "0.7.4",
+                    "confidence": "unverified",
+                    "raw": {
+                      "text": "すべての元素ダメージに対する耐性を得ます。敵からダメージを受けると、その敵に即座に2∼16(2d8)判断力(+判断力修正値)追加火炎ダメージ 、2∼16(2d8)判断力(+判断力修正値)追加冷気ダメージ 、2∼16(2d8)判断力(+判断力修正値)追加電撃ダメージ を与えます。",
+                      "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                      "original_fields": {
+                        "control_cost_bonus": 4,
+                        "stat_bonus": {
+                          "intelligence": 2,
+                          "wisdom": 2
+                        }
+                      },
+                      "wiki_tags": [
+                        "判断力基準"
+                      ]
+                    },
+                    "structured": {
+                      "stat_bonus": {
+                        "cha": 4
+                      },
+                      "damage": [
+                        {
+                          "dice": "2d8",
+                          "type": "fire",
+                          "bonus_stat": "wis"
+                        },
+                        {
+                          "dice": "2d8",
+                          "type": "cold",
+                          "bonus_stat": "wis"
+                        },
+                        {
+                          "dice": "2d8",
+                          "type": "lightning",
+                          "bonus_stat": "wis"
+                        }
+                      ]
+                    },
+                    "ext": {}
                   },
                   {
-                      "id":  "rank9_03_enmeria_S2",
-                      "name":  "精霊の護り",
-                      "kind":  "part",
-                      "slot":  "S2",
-                      "source_monster":  "rank9_03_enmeria",
-                      "control_cost_bonus":  4,
-                      "game_version":  "0.5.4",
-                      "confidence":  "unverified",
-                      "raw":  {
-                                  "text":  "ターン開始時、全ての味方に属性ダメージを無効化するシールドを展開する。",
-                                  "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                  "original_fields":  {
-                                                          "control_cost_bonus":  4,
-                                                          "stat_bonus":  {
-                                                                             "constitution":  2
-                                                                         }
-                                                      }
-                              },
-                      "structured":  {
-                                         "stat_bonus":  {
-                                                            "con":  2
-                                                        }
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_03_enmeria_S2",
+                    "name": "元素の花冠",
+                    "kind": "part",
+                    "slot": "S2",
+                    "source_monster": "rank9_03_enmeria",
+                    "control_cost_bonus": 6,
+                    "game_version": "0.7.4",
+                    "confidence": "unverified",
+                    "raw": {
+                      "text": "すべての敵に火炎ダメージ脆弱、冷気ダメージ脆弱、電撃ダメージ脆弱を付与するオーラを展開します。セーヴに失敗した敵は交戦の間効果を受けます。セーヴに成功した敵は10秒ごとに再判定します。",
+                      "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                      "original_fields": {
+                        "control_cost_bonus": 4,
+                        "stat_bonus": {
+                          "constitution": 2
+                        }
+                      },
+                      "wiki_tags": [
+                        "範囲",
+                        "判断力セーヴ(判断力基準)",
+                        "CD 10秒"
+                      ]
+                    },
+                    "structured": {
+                      "stat_bonus": {
+                        "int": 4
+                      },
+                      "damage": []
+                    },
+                    "ext": {}
                   },
                   {
                       "id":  "rank9_04_transcendent_M",
@@ -4236,115 +4257,125 @@
                               }
                   },
                   {
-                      "id":  "rank9_06_physis_M",
-                      "name":  "深紅の玉座",
-                      "kind":  "part",
-                      "slot":  "M",
-                      "source_monster":  "rank9_06_physis",
-                      "control_cost_bonus":  12,
-                      "game_version":  "0.7.4",
-                      "confidence":  "manual",
-                      "raw":  {
-                                  "text":  "後列の敵から血を抜き、出血状態にします。対象の血の君臨スタック数に応じて、追加の死霊ダメージを与えます。\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間8秒,個別スタック）\n血の君臨：出血がダメージを与えるたび、フュシスの魅力修正値＋1スタックにつき1d6の追加死霊ダメージを与えます。（最大スタック：20）",
-                                  "source":  "b228",
-                                  "wiki_tags":  [
-                                                    "主行動",
-                                                  "魅力基準",
-                                                  "呪文",
-                                                  "遠距離",
-                                                  "範囲",
-                                                  "耐久力セーヴ（DC12魅力補正）",
-                                                  "CT12秒"
-                                                ],
-                                  "original_fields":  {
-                                                        "control_cost_bonus":  12,
-                                                        "stat_bonus":  {
-                                                                           "constitution":  4,
-                                                                             "wisdom":  2
-                                                                         },
-                                                          "damage":  [
-                                                                         {
-                                                                             "dice":  "5d10",
-                                                                             "bonus":  "耐久力修正値",
-                                                                             "damage_type":  "刺突"
-                                                                         }
-                                                                     ]
-                                                      }
-                              },
-                      "structured":  {
-                                         "action_type":  "main_action",
-                                         "delivery":  "spell",
-                                         "range":  "ranged",
-                                         "base_stat":  "cha",
-                                         "stat_bonus":  {
-                                                            "con":  4,
-                                                            "wis":  2
-                                                        },
-                                         "damage":  [],
-                                         "save":  {
-                                                      "stat":  "con",
-                                                      "dc_formula":  "12+cha_mod"
-                                                  }
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_06_physis_M",
+                    "name": "深紅の玉座",
+                    "kind": "part",
+                    "slot": "M",
+                    "source_monster": "rank9_06_physis",
+                    "control_cost_bonus": 12,
+                    "game_version": "0.7.4",
+                    "confidence": "manual",
+                    "raw": {
+                      "text": "後列の敵から血を抜き、出血状態にします。対象の血の君臨スタック数に応じて、追加の死霊ダメージを与えます。\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間8秒,個別スタック）\n血の君臨：出血がダメージを与えるたび、フュシスの魅力修正値＋1スタックにつき1d6の追加死霊ダメージを与えます。（最大スタック：20）",
+                      "source": "b220",
+                      "wiki_tags": [
+                        "主行動",
+                        "魅力基準",
+                        "呪文",
+                        "遠距離",
+                        "範囲",
+                        "耐久力セーヴ（魅力補正）",
+                        "CT12秒"
+                      ],
+                      "original_fields": {
+                        "control_cost_bonus": 12,
+                        "stat_bonus": {
+                          "constitution": 4,
+                          "wisdom": 2
+                        },
+                        "damage": [
+                          {
+                            "dice": "5d10",
+                            "bonus": "耐久力修正値",
+                            "damage_type": "刺突"
+                          }
+                        ]
+                      }
+                    },
+                    "structured": {
+                      "action_type": "main_action",
+                      "delivery": "spell",
+                      "range": "ranged",
+                      "base_stat": "cha",
+                      "stat_bonus": {
+                        "cha": 5
+                      },
+                      "damage": [
+                        {
+                          "dice": "8d10",
+                          "type": "necrotic",
+                          "bonus_stat": "cha"
+                        },
+                        {
+                          "dice": "1d10",
+                          "type": "necrotic"
+                        }
+                      ],
+                      "save": {
+                        "stat": "con",
+                        "dc_formula": "12+cha_mod"
+                      }
+                    },
+                    "ext": {}
                   },
                   {
-                      "id":  "rank9_06_physis_S1",
-                      "name":  "寄生胞子",
-                      "kind":  "part",
-                      "slot":  "S1",
-                      "source_monster":  "rank9_06_physis",
-                      "control_cost_bonus":  4,
-                      "game_version":  "0.5.4",
-                      "confidence":  "unverified",
-                      "raw":  {
-                                  "text":  "攻撃を受けた際に胞子をまき散らし、敵に持続毒ダメージと攻撃低下を付与する。",
-                                  "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                  "original_fields":  {
-                                                          "control_cost_bonus":  4,
-                                                          "stat_bonus":  {
-                                                                             "wisdom":  2
-                                                                         }
-                                                      }
-                              },
-                      "structured":  {
-                                         "stat_bonus":  {
-                                                            "wis":  2
-                                                        }
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_06_physis_S1",
+                    "name": "血の帳",
+                    "kind": "part",
+                    "slot": "S1",
+                    "source_monster": "rank9_06_physis",
+                    "control_cost_bonus": 6,
+                    "game_version": "0.7.4",
+                    "confidence": "manual",
+                    "raw": {
+                      "text": "出血状態の敵が死亡すると、消費した主行動1回を回復します。\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間8秒,個別スタック）",
+                      "source": "b220",
+                      "original_fields": {
+                        "control_cost_bonus": 4,
+                        "stat_bonus": {
+                          "wisdom": 2
+                        }
+                      }
+                    },
+                    "structured": {
+                      "stat_bonus": {
+                        "wis": 2
+                      },
+                      "damage": []
+                    },
+                    "ext": {}
                   },
                   {
-                      "id":  "rank9_06_physis_S2",
-                      "name":  "光合成の守護",
-                      "kind":  "part",
-                      "slot":  "S2",
-                      "source_monster":  "rank9_06_physis",
-                      "control_cost_bonus":  4,
-                      "game_version":  "0.5.4",
-                      "confidence":  "unverified",
-                      "raw":  {
-                                  "text":  "受けるあらゆる属性ダメージを軽減し、戦闘中の自己再生能力を高める。",
-                                  "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                  "original_fields":  {
-                                                          "control_cost_bonus":  4,
-                                                          "stat_bonus":  {
-                                                                             "hp":  30
-                                                                         }
-                                                      }
-                              },
-                      "structured":  {
-                                         "stat_bonus":  {
-                                                            "hp":  30
-                                                        }
-                                     },
-                      "ext":  {
-
-                              }
+                    "id": "rank9_06_physis_S2",
+                    "name": "生命の源",
+                    "kind": "part",
+                    "slot": "S2",
+                    "source_monster": "rank9_06_physis",
+                    "control_cost_bonus": 6,
+                    "game_version": "0.7.4",
+                    "confidence": "manual",
+                    "raw": {
+                      "text": "近接攻撃を受けると反応し、自信を攻撃した前列の敵に3d10追加死霊ダメージ（魅力補正）を与えて出血を付与した後、自信を3d10回復（魅力補正）回復します。\n出血：2秒ごとに2d6の物理ダメージを受けます。（持続時間8秒,個別スタック）",
+                      "source": "b220",
+                      "original_fields": {
+                        "control_cost_bonus": 4,
+                        "stat_bonus": {
+                          "hp": 30
+                        }
+                      },
+                      "wiki_tags": [
+                        "反応行動",
+                        "魅力基準",
+                        "CT12秒"
+                      ]
+                    },
+                    "structured": {
+                      "stat_bonus": {},
+                      "damage": [],
+                      "action_type": "reaction",
+                      "base_stat": "cha"
+                    },
+                    "ext": {}
                   }
               ],
     "dataset_revision":  "ranked-english-ids-v2"

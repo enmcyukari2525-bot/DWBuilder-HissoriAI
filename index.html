@@ -104,8 +104,6 @@
     <script type="module">
       try {
         await window.MonsterSchema.initialize();
-        document.getElementById('schema-load-status').textContent =
-          `新データ構造を読み込みました（${window.MonsterSchema.schema.monsters.length}体）。`;
         await import('./app.js');
       } catch (error) {
         console.error('Failed to initialize the new monster schema.', error);
