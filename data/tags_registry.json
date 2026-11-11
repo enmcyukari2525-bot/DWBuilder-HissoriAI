@@ -1,0 +1,370 @@
+{
+    "schema_version":  "1.0",
+    "damage_type":  [
+                        {
+                            "era":  "canonical",
+                            "name":  "物理",
+                            "id":  "physical"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "火炎",
+                            "id":  "fire"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "冷気",
+                            "id":  "cold"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "自然",
+                            "id":  "nature"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "光輝",
+                            "id":  "radiant"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "死霊",
+                            "id":  "necrotic"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "力場",
+                            "id":  "force"
+                        },
+                        {
+                            "era":  "canonical",
+                            "name":  "精神",
+                            "id":  "psychic"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "斬撃",
+                            "id":  "slashing"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "刺突",
+                            "id":  "piercing"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "打撃",
+                            "id":  "bludgeoning"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "電撃",
+                            "id":  "lightning"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "雷鳴",
+                            "id":  "thunder"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "酸",
+                            "id":  "acid"
+                        },
+                        {
+                            "era":  "legacy",
+                            "name":  "毒",
+                            "id":  "poison"
+                        }
+                    ],
+    "action_type":  [
+                        {
+                            "id":  "main_action",
+                            "name":  "主行動"
+                        },
+                        {
+                            "id":  "reaction",
+                            "name":  "反応行動"
+                        },
+                        {
+                            "id":  "passive",
+                            "name":  "持続効果"
+                        },
+                        {
+                            "id":  "engagement_start",
+                            "name":  "交戦開始時"
+                        },
+                        {
+                            "id":  "turn_start",
+                            "name":  "ターン開始時"
+                        }
+                    ],
+    "delivery":  [
+                     {
+                         "id":  "spell",
+                         "name":  "呪文"
+                     },
+                     {
+                         "id":  "melee",
+                         "name":  "近接"
+                     },
+                     {
+                         "id":  "ranged",
+                         "name":  "遠距離"
+                     },
+                     {
+                         "id":  "weapon",
+                         "name":  "武器"
+                     }
+                 ],
+    "target_scope":  [
+                         {
+                             "id":  "self",
+                             "name":  "自身"
+                         },
+                         {
+                             "id":  "target",
+                             "name":  "対象"
+                         },
+                         {
+                             "id":  "ally_all",
+                             "name":  "味方全体"
+                         },
+                         {
+                             "id":  "ally_row",
+                             "name":  "味方列"
+                         },
+                         {
+                             "id":  "enemy_all",
+                             "name":  "敵全体"
+                         },
+                         {
+                             "id":  "enemy_row",
+                             "name":  "敵列"
+                         },
+                         {
+                             "id":  "enemy_front",
+                             "name":  "前列の敵"
+                         },
+                         {
+                             "id":  "adjacent",
+                             "name":  "隣接"
+                         },
+                         {
+                             "id":  "dungeon",
+                             "name":  "ダンジョン全域"
+                         }
+                     ],
+    "event":  [
+                  {
+                      "id":  "cast_spell",
+                      "name":  "呪文を唱える"
+                  },
+                  {
+                      "id":  "deal_damage",
+                      "name":  "ダメージを与える"
+                  },
+                  {
+                      "id":  "take_damage",
+                      "name":  "ダメージを受ける"
+                  },
+                  {
+                      "id":  "receive_critical_hit",
+                      "name":  "クリティカル攻撃を受ける"
+                  },
+                  {
+                      "id":  "attack_missed",
+                      "name":  "攻撃を回避する"
+                  },
+                  {
+                      "id":  "defeat_enemy",
+                      "name":  "敵を撃破する"
+                  },
+                  {
+                      "id":  "heal",
+                      "name":  "回復する"
+                  },
+                  {
+                      "id":  "apply_status",
+                      "name":  "状態を付与する"
+                  },
+                  {
+                      "id":  "engagement_start",
+                      "name":  "交戦開始"
+                  },
+                  {
+                      "id":  "turn_start",
+                      "name":  "ターン開始"
+                  },
+                  {
+                      "id":  "invasion_start",
+                      "name":  "侵攻開始"
+                  }
+              ],
+    "effect_kind":  [
+                        {
+                            "id":  "damage",
+                            "name":  "ダメージ"
+                        },
+                        {
+                            "id":  "apply_status",
+                            "name":  "状態付与"
+                        },
+                        {
+                            "id":  "remove_status",
+                            "name":  "状態解除"
+                        },
+                        {
+                            "id":  "shield",
+                            "name":  "シールド"
+                        },
+                        {
+                            "id":  "temp_hp",
+                            "name":  "一時HP"
+                        },
+                        {
+                            "id":  "heal",
+                            "name":  "回復"
+                        },
+                        {
+                            "id":  "stat_bonus",
+                            "name":  "ステータス補正"
+                        },
+                        {
+                            "id":  "bonus_damage_pct",
+                            "name":  "ダメージ割合補正"
+                        },
+                        {
+                            "id":  "cooldown_change",
+                            "name":  "クールダウン変更"
+                        },
+                        {
+                            "id":  "action_grant",
+                            "name":  "行動付与"
+                        },
+                        {
+                            "id":  "save_modifier",
+                            "name":  "セーヴ補正"
+                        },
+                        {
+                            "id":  "dispel",
+                            "name":  "無効化"
+                        }
+                    ],
+    "status":  [
+                   {
+                       "id":  "prone",
+                       "name":  "伏せ状態"
+                   },
+                   {
+                       "id":  "fear",
+                       "name":  "恐怖"
+                   },
+                   {
+                       "id":  "silence",
+                       "name":  "沈黙"
+                   },
+                   {
+                       "id":  "restrained",
+                       "name":  "拘束"
+                   },
+                   {
+                       "name":  "即死",
+                       "id":  "custom:即死",
+                       "unclassified":  true
+                   }
+               ],
+    "race":  [
+                 {
+                     "id":  "beast",
+                     "name":  "野獣"
+                 },
+                 {
+                     "id":  "spirit",
+                     "name":  "精霊"
+                 },
+                 {
+                     "id":  "undead",
+                     "name":  "アンデッド"
+                 }
+             ],
+    "stat":  [
+                 {
+                     "id":  "hp",
+                     "name":  "HP"
+                 },
+                 {
+                     "id":  "ac",
+                     "name":  "AC"
+                 },
+                 {
+                     "id":  "initiative",
+                     "name":  "Initiative"
+                 },
+                 {
+                     "id":  "str",
+                     "name":  "筋力"
+                 },
+                 {
+                     "id":  "dex",
+                     "name":  "敏捷力"
+                 },
+                 {
+                     "id":  "con",
+                     "name":  "耐久力"
+                 },
+                 {
+                     "id":  "int",
+                     "name":  "知力"
+                 },
+                 {
+                     "id":  "wis",
+                     "name":  "判断力"
+                 },
+                 {
+                     "id":  "cha",
+                     "name":  "魅力"
+                 }
+             ],
+    "confidence":  [
+                       {
+                           "id":  "auto",
+                           "name":  "自動分類"
+                       },
+                       {
+                           "id":  "manual",
+                           "name":  "人手確認済み"
+                       },
+                       {
+                           "id":  "unverified",
+                           "name":  "未照合"
+                       }
+                   ],
+    "source_tags":  [
+                        "主行動",
+                        "筋力基準",
+                        "近接",
+                        "筋力命中ロール(+23)",
+                        "耐久力セーヴ(DC 38+筋力修正値)",
+                        "筋力命中ロール",
+                        "知力基準",
+                        "呪文",
+                        "遠距離",
+                        "知力命中ロール(+22)",
+                        "敏捷力セーブ(DC12+知力修正値)",
+                        "反応行動",
+                        "範囲",
+                        "判断力基準",
+                        "判断力命中ロール",
+                        "敏捷力セーヴ",
+                        "知力命中ロール",
+                        "知力セーヴ",
+                        "敏捷力基準",
+                        "敏捷力命中ロール",
+                        "魅力基準",
+                        "魅力セーヴ",
+                        "耐久力セーヴ",
+                        "耐久力基準",
+                        "耐久力命中ロール"
+                    ]
+}

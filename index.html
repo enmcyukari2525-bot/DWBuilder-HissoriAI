@@ -12,6 +12,8 @@
         <div>
           <p class="eyebrow">Monster Builder</p>
           <h1>ダンジョンウィズイン 編成ビルダー</h1>
+          <p class="app-version" data-app-version></p>
+          <p id="schema-load-status" class="data-transfer-status" role="status" aria-live="polite"></p>
         </div>
         <a href="monster-editor.html" class="primary-btn editor-link">モンスター編集</a>
       </header>
@@ -97,11 +99,20 @@
       </main>
     </div>
 
-    <script src="rank5-data.js"></script>
-    <script src="rank6-data.js"></script>
-    <script src="rank7-data.js"></script>
-    <script src="rank8-data.js"></script>
-    <script src="rank9-data.js"></script>
-    <script src="app.js"></script>
+    <script src="app-version.js"></script>
+    <script src="schema-data.js"></script>
+    <script type="module">
+      try {
+        await window.MonsterSchema.initialize();
+        document.getElementById('schema-load-status').textContent =
+          `新データ構造を読み込みました（${window.MonsterSchema.schema.monsters.length}体）。`;
+        await import('./app.js');
+      } catch (error) {
+        console.error('Failed to initialize the new monster schema.', error);
+        const status = document.getElementById('schema-load-status');
+        status.textContent = `モンスターデータを読み込めませんでした：${error.message}`;
+        status.classList.add('error');
+      }
+    </script>
   </body>
 </html>

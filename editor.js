@@ -225,11 +225,11 @@ async function loadLatestMonsterDataScripts() {
   }
 
   const dataFiles = [
-    ['RANK5_DATA', 'rank5-data.js', 5],
-    ['RANK6_DATA', 'rank6-data.js', 6],
-    ['RANK7_DATA', 'rank7-data.js', 7],
-    ['RANK8_DATA', 'rank8-data.js', 8],
-    ['RANK9_DATA', 'rank9-data.js', 9]
+    ['RANK5_DATA', 'old/rank5-data.js', 5],
+    ['RANK6_DATA', 'old/rank6-data.js', 6],
+    ['RANK7_DATA', 'old/rank7-data.js', 7],
+    ['RANK8_DATA', 'old/rank8-data.js', 8],
+    ['RANK9_DATA', 'old/rank9-data.js', 9]
   ];
   const originalData = Object.fromEntries(dataFiles.map(([key]) => [key, window[key]]));
   const originalVersion = window.MONSTER_DATA_VERSION;
