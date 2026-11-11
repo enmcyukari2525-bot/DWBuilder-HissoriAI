@@ -560,6 +560,8 @@ const partPickerState = {
   monsterId: null,
   slotKey: null,
   rank: 'all',
+  tag: '',
+  keyword: '',
   sortStat: null,
   sortDirection: 'desc'
 };
@@ -707,14 +709,6 @@ function parseAbilityKeyFromText(text) {
   if (!match) return null;
 
   return map[match[1]] || map[match[1].toLowerCase()] || map[match[1].toUpperCase()] || null;
-}
-
-function getPartBasisLabel(part) {
-  const tags = Array.isArray(part.tags) ? part.tags : [];
-  const basisTag = tags.find((tag) => /基準|based on/i.test(tag));
-  const attackTag = tags.find((tag) => /命中ロール|attack roll/i.test(tag));
-  const abilityKey = parseAbilityKeyFromText(basisTag || attackTag || part.description || '');
-  return abilityKey ? `${formatAbilityName(abilityKey)}基準` : null;
 }
 
 function getPartStatBonusLabels(part) {
@@ -886,6 +880,8 @@ function openPartPicker(monsterId, slotKey) {
   partPickerState.monsterId = monsterId;
   partPickerState.slotKey = slotKey;
   partPickerState.rank = 'all';
+  partPickerState.tag = '';
+  partPickerState.keyword = '';
   partPickerState.sortStat = null;
   partPickerState.sortDirection = 'desc';
   renderPartPicker();
@@ -897,29 +893,22 @@ function closePartPicker() {
   renderPartPicker();
 }
 
-function renderPartPicker() {
-  const modal = document.getElementById('part-selector-modal');
-  if (!modal) return;
+function normalizePartSearchText(value) {
+  return String(value).normalize('NFKC').toLowerCase();
+}
 
-  if (!partPickerState.monsterId || !partPickerState.slotKey) {
-    modal.classList.add('hidden');
-    modal.setAttribute('aria-hidden', 'true');
-    modal.innerHTML = '';
-    return;
-  }
-
-  const monster = getMonsterById(partPickerState.monsterId);
-  if (!monster) {
-    closePartPicker();
-    return;
-  }
-
-  const slotLabel = partPickerState.slotKey === 'main' ? 'Mパーツ' : partPickerState.slotKey === 'sub1' ? 'S1パーツ' : 'S2パーツ';
+function renderPartPickerResults(modal, monster) {
   const slotParts = partCatalog.filter((part) => part.slot === (partPickerState.slotKey === 'main' ? 'main' : 'sub'));
-  const rankOptions = [...new Set(slotParts.map((part) => Number(part.rank)).filter(Number.isFinite))]
-    .sort((a, b) => b - a);
+  const keyword = normalizePartSearchText(partPickerState.keyword.trim());
   const filteredParts = slotParts.filter((part) =>
-    partPickerState.rank === 'all' || Number(part.rank) === Number(partPickerState.rank)
+    (partPickerState.rank === 'all' || Number(part.rank) === Number(partPickerState.rank)) &&
+    (!partPickerState.tag || (Array.isArray(part.tags) && part.tags.includes(partPickerState.tag))) &&
+    (!keyword || [
+      part.name || '',
+      ...(Array.isArray(part.tags) ? part.tags : []),
+      ...getPartDescriptionLines(part),
+      ...getPartDiceLines(part)
+    ].some((text) => normalizePartSearchText(text).includes(keyword)))
   );
   if (partPickerState.sortStat) {
     const sortStat = partPickerState.sortStat;
@@ -946,8 +935,6 @@ function renderPartPicker() {
     const metaTags = [];
     if (part.slot === 'sub') metaTags.push(part.slotLabel || 'S');
     metaTags.push(...getPartStatBonusLabels(part));
-    const basisLabel = getPartBasisLabel(part);
-    if (basisLabel) metaTags.push(basisLabel);
     metaTags.push(part.sourceMonsterName || '不明');
 
     const effectLines = getPartEffectLines(part).filter((line) => line !== '効果詳細は未記載です。');
@@ -962,6 +949,9 @@ function renderPartPicker() {
         <div class="part-meta">
           ${metaTags.map((tag) => `<span class="part-badge">${escapeHtml(tag)}</span>`).join('')}
         </div>
+        ${Array.isArray(part.tags) && part.tags.length
+          ? `<div class="part-meta" aria-label="パーツのタグ">${part.tags.filter(Boolean).map((tag) => `<span class="part-badge">${escapeHtml(tag)}</span>`).join('')}</div>`
+          : ''}
         <div class="part-picker-effects">
           ${effectLines.length
             ? effectLines.map((line) => `<p>${escapeHtml(line)}</p>`).join('')
@@ -971,6 +961,44 @@ function renderPartPicker() {
       </div>
     `;
   }).join('');
+
+  modal.querySelector('.part-modal-list').innerHTML =
+    cardHtml || '<div class="empty-team">条件に一致するパーツがありません。</div>';
+
+  modal.querySelectorAll('[data-role="equip-part"]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const { partId, slotKey } = button.dataset;
+      setSlotPart(monster.id, slotKey, partId);
+      updateView();
+      closePartPicker();
+    });
+  });
+}
+
+function renderPartPicker() {
+  const modal = document.getElementById('part-selector-modal');
+  if (!modal) return;
+
+  if (!partPickerState.monsterId || !partPickerState.slotKey) {
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = '';
+    return;
+  }
+
+  const monster = getMonsterById(partPickerState.monsterId);
+  if (!monster) {
+    closePartPicker();
+    return;
+  }
+
+  const slotLabel = partPickerState.slotKey === 'main' ? 'Mパーツ' : partPickerState.slotKey === 'sub1' ? 'S1パーツ' : 'S2パーツ';
+  const slotParts = partCatalog.filter((part) => part.slot === (partPickerState.slotKey === 'main' ? 'main' : 'sub'));
+  const rankOptions = [...new Set(slotParts.map((part) => Number(part.rank)).filter(Number.isFinite))]
+    .sort((a, b) => b - a);
+  const tagOptions = [...new Set(slotParts.flatMap((part) =>
+    Array.isArray(part.tags) ? part.tags.filter((tag) => typeof tag === 'string' && tag.length > 0) : []
+  ))].sort((a, b) => a.localeCompare(b, 'ja'));
 
   modal.classList.remove('hidden');
   modal.setAttribute('aria-hidden', 'false');
@@ -990,16 +1018,27 @@ function renderPartPicker() {
         }).join('')}
         ${partPickerState.sortStat ? '<button type="button" class="part-sort-reset" data-role="reset-part-sort">初期順</button>' : ''}
       </div>
-      <label class="part-rank-filter">
-        <span>等級</span>
-        <select data-role="filter-parts-rank" aria-label="パーツの等級で絞り込み">
-          <option value="all"${partPickerState.rank === 'all' ? ' selected' : ''}>すべて</option>
-          ${rankOptions.map((rank) => `<option value="${rank}"${Number(partPickerState.rank) === rank ? ' selected' : ''}>${rank}等級</option>`).join('')}
-        </select>
-      </label>
-      <div class="part-modal-list">
-        ${cardHtml || '<div class="empty-team">装備可能なパーツがありません。</div>'}
+      <div class="part-filters">
+        <label class="part-filter">
+          <span>等級</span>
+          <select data-role="filter-parts-rank" aria-label="パーツの等級で絞り込み">
+            <option value="all"${partPickerState.rank === 'all' ? ' selected' : ''}>すべて</option>
+            ${rankOptions.map((rank) => `<option value="${rank}"${Number(partPickerState.rank) === rank ? ' selected' : ''}>${rank}等級</option>`).join('')}
+          </select>
+        </label>
+        <label class="part-filter">
+          <span>タグ</span>
+          <select data-role="filter-parts-tag" aria-label="パーツのタグで絞り込み">
+            <option value="">すべて</option>
+            ${tagOptions.map((tag) => `<option value="${escapeHtml(tag)}"${partPickerState.tag === tag ? ' selected' : ''}>${escapeHtml(tag)}</option>`).join('')}
+          </select>
+        </label>
+        <label class="part-filter">
+          <span>キーワード</span>
+          <input type="search" data-role="search-parts" value="${escapeHtml(partPickerState.keyword)}" placeholder="名前・タグ・効果" aria-label="パーツのキーワード検索">
+        </label>
       </div>
+      <div class="part-modal-list"></div>
     </div>
   `;
 
@@ -1030,14 +1069,22 @@ function renderPartPicker() {
     renderPartPicker();
   });
 
-  modal.querySelectorAll('[data-role="equip-part"]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const { partId, slotKey } = button.dataset;
-      setSlotPart(monster.id, slotKey, partId);
-      updateView();
-      closePartPicker();
-    });
+  modal.querySelector('[data-role="filter-parts-tag"]')?.addEventListener('change', (event) => {
+    partPickerState.tag = event.currentTarget.value;
+    renderPartPicker();
   });
+
+  const keywordInput = modal.querySelector('[data-role="search-parts"]');
+  const updateKeyword = () => {
+    partPickerState.keyword = keywordInput.value;
+    renderPartPickerResults(modal, monster);
+  };
+  keywordInput.addEventListener('input', (event) => {
+    if (!event.isComposing) updateKeyword();
+  });
+  keywordInput.addEventListener('compositionend', updateKeyword);
+
+  renderPartPickerResults(modal, monster);
 }
 
 function roleWeight(role) {

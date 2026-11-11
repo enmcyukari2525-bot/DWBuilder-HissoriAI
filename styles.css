@@ -977,22 +977,35 @@ h1 {
   margin-right: 2px;
 }
 
-.part-rank-filter {
+.part-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
+.part-filter {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 14px;
+  max-width: 100%;
   color: var(--muted);
   font-size: 0.8rem;
 }
 
-.part-rank-filter select {
+.part-filter select,
+.part-filter input {
   min-width: 120px;
+  max-width: 100%;
   border: 1px solid rgba(148, 163, 184, 0.28);
   border-radius: 8px;
   padding: 7px 10px;
   background: rgba(51, 65, 85, 0.65);
   color: var(--text);
+}
+
+.part-filter input {
+  width: 200px;
 }
 
 .part-sort-button,
@@ -1134,7 +1147,8 @@ h1 {
   line-height: 1.5;
 }
 
-.part-card button {
+.part-card button,
+.slot-remove-btn {
   margin-top: 10px;
   width: 100%;
   border-radius: 8px;
@@ -1142,6 +1156,10 @@ h1 {
   background: rgba(124, 147, 255, 0.14);
   color: #dfe8ff;
   border: 1px solid rgba(124, 147, 255, 0.35);
+}
+
+.slot-remove-btn {
+  margin-top: auto;
 }
 
 .suggestion-box {

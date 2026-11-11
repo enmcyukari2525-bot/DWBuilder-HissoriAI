@@ -74,6 +74,7 @@ data/
   "control_cost_bonus": 8,
   "game_version": "0.5.4",
   "confidence": "manual",       // auto | manual | unverified
+  "custom_tags": ["判断力基準"], // 編集者が補足する任意のタグ
 
   "raw": {
     "text": "対象に強力な力場ダメージを与えて空中へ打ち上げた後…",
@@ -111,6 +112,8 @@ data/
 | raw | 事実の保存。翻訳・要約前の原文 | 効果文全文、wikiタグ、URL |
 | structured | 数値計算に必要な機械可読フィールド | ダイス、属性、セーブDC、能力値ボーナス |
 | semantic | シナジー判定用のイベント表現 | emits / triggers / effects |
+
+`custom_tags` は任意の文字列配列で、公式タグにない基準などを編集者が補足する。公式由来の `raw.wiki_tags` とは分けて保存し、表示・検索時には両方を使用する。シナジーや計算への自動反映は行わない。
 
 ## 5. 語彙(tags_registry.json)
 

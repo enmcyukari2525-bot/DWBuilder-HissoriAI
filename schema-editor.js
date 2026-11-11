@@ -556,13 +556,6 @@ function renderAbility(ability, title, monster) {
       markDirty();
     }
   }));
-  section.appendChild(makeField('ゲームバージョン', ability.game_version, {
-    onInput: (value) => {
-      ability.game_version = value;
-      markDirty();
-    }
-  }));
-
   const confidenceLabel = makeElement('label', 'schema-field');
   confidenceLabel.appendChild(makeElement('span', '', '確信度'));
   const confidence = document.createElement('select');
@@ -697,6 +690,17 @@ function renderAbilityFields(ability, monster) {
       markDirty();
     }
   }));
+  const customTagsField = makeField('カスタムタグ（1行に1つ）', (ability.custom_tags || []).join('\n'), {
+    multiline: true,
+    rows: 3,
+    fullWidth: true,
+    onInput: (value) => {
+      ability.custom_tags = value.split(/\r?\n/).map((tag) => tag.trim()).filter(Boolean);
+      markDirty();
+    }
+  });
+  customTagsField.appendChild(makeElement('small', 'schema-editor-help', '公式タグにない情報で、基準になるものを任意で入力できます。'));
+  wrapper.appendChild(customTagsField);
   wrapper.appendChild(renderStructuredEditor(ability));
   const originalFields = raw.original_fields || {};
   const hasLegacyStructuredValues = ['damage', 'stat_bonus', 'control_cost_bonus']

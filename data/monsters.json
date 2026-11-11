@@ -3102,103 +3102,98 @@
                                        }
                      },
                      {
-                         "id":  "rank9_03_enmeria",
-                         "name":  "エンメリア",
-                         "name_en":  "Enmeria",
-                         "race":  "spirit",
-                         "rank":  9,
-                         "control_cost":  25,
-                         "game_version":  "0.5.4",
-                         "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                         "stats":  {
-                                       "hp":  130,
-                                       "ac":  9,
-                                       "initiative":  2,
-                                       "str":  10,
-                                       "dex":  20,
-                                       "con":  18,
-                                       "int":  26,
-                                       "wis":  30,
-                                       "cha":  22
-                                   },
-                         "immunities":  [
-                                            "fire",
-                                            "cold",
-                                            "lightning"
-                                        ],
-                         "resistances":  [
-
-                                         ],
-                         "vulnerabilities":  [
-
-                                             ],
-                         "abilities":  {
-                                           "basic_attack":  {
-                                                                "id":  "rank9_03_enmeria_basic_attack",
-                                                                "name":  "元素の一閃",
-                                                                "kind":  "basic_attack",
-                                                                "source_monster":  "rank9_03_enmeria",
-                                                                "game_version":  "0.5.4",
-                                                                "confidence":  "unverified",
-                                                                "raw":  {
-                                                                            "text":  "純粋な元素エネルギーを集約して射出する。",
-                                                                            "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                                                            "wiki_tags":  [
-                                                                                              "主行動",
-                                                                                              "判断力基準",
-                                                                                              "呪文",
-                                                                                              "遠距離",
-                                                                                              "判断力命中ロール"
-                                                                                          ],
-                                                                            "original_fields":  {
-                                                                                                    "damage":  "5d6+判断力修正値",
-                                                                                                    "damage_type":  "電撃",
-                                                                                                    "bonus":  "判断力修正値"
-                                                                                                }
-                                                                        },
-                                                                "structured":  {
-                                                                                   "action_type":  "main_action",
-                                                                                   "delivery":  "spell",
-                                                                                   "range":  "ranged",
-                                                                                   "base_stat":  "wis",
-                                                                                   "damage":  [
-                                                                                                  {
-                                                                                                      "dice":  "5d6",
-                                                                                                      "bonus_stat":  "wis",
-                                                                                                      "type":  "lightning"
-                                                                                                  }
-                                                                                              ]
-                                                                               },
-                                                                "ext":  {
-
-                                                                        }
-                                                            },
-                                           "unique_trait":  {
-                                                                "id":  "rank9_03_enmeria_unique_trait",
-                                                                "name":  "原初の輪舞",
-                                                                "kind":  "unique_trait",
-                                                                "source_monster":  "rank9_03_enmeria",
-                                                                "game_version":  "0.5.4",
-                                                                "confidence":  "unverified",
-                                                                "raw":  {
-                                                                            "text":  "自身が敵に与える火炎・冷気・電撃ダメージが判断力修正値分増加する。味方全体が与える元素ダメージの倍率を常時強化する。",
-                                                                            "source":  "https://dungeonwithin.miraheze.org/wiki/Main_Page",
-                                                                            "wiki_tags":  [
-                                                                                              "範囲"
-                                                                                          ],
-                                                                            "original_fields":  {
-                                                                                                    "bonuses":  [
-                                                                                                                    "火炎免疫",
-                                                                                                                    "冷気免疫",
-                                                                                                                    "電撃免疫"
-                                                                                                                ]
-                                                                                                }
-                                                                        },
-                                                                "ext":  {
-
-                                                                        }
-                                                            }
-                                       }
+                       "id": "rank9_03_enmeria",
+                       "name": "エンメリア",
+                       "name_en": "Enmeria",
+                       "race": "spirit",
+                       "rank": 9,
+                       "control_cost": 64,
+                       "game_version": "0.7.4",
+                       "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                       "stats": {
+                         "hp": 185,
+                         "ac": 8,
+                         "initiative": 0,
+                         "str": 10,
+                         "dex": 22,
+                         "con": 24,
+                         "int": 34,
+                         "wis": 40,
+                         "cha": 36
+                       },
+                       "immunities": [
+                         "fire",
+                         "cold",
+                         "lightning"
+                       ],
+                       "resistances": [],
+                       "vulnerabilities": [],
+                       "abilities": {
+                         "basic_attack": {
+                           "id": "rank9_03_enmeria_basic_attack",
+                           "name": "雷の矢",
+                           "kind": "basic_attack",
+                           "source_monster": "rank9_03_enmeria",
+                           "game_version": "0.7.4",
+                           "confidence": "unverified",
+                           "raw": {
+                             "text": "5d6+7 電撃ダメージ(+判断力修正値)\n稲妻を放ちます。",
+                             "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                             "wiki_tags": [
+                               "主行動",
+                               "判断力基準",
+                               "呪文",
+                               "遠距離",
+                               "判断力命中ロール"
+                             ],
+                             "original_fields": {
+                               "damage": "5d6+判断力修正値",
+                               "damage_type": "電撃",
+                               "bonus": "判断力修正値"
+                             }
+                           },
+                           "structured": {
+                             "action_type": "main_action",
+                             "delivery": "spell",
+                             "range": "ranged",
+                             "base_stat": "wis",
+                             "damage": [
+                               {
+                                 "dice": "5d6+7",
+                                 "bonus_stat": "wis",
+                                 "type": "lightning"
+                               }
+                             ],
+                             "stat_bonus": {}
+                           },
+                           "ext": {}
+                         },
+                         "unique_trait": {
+                           "id": "rank9_03_enmeria_unique_trait",
+                           "name": "精霊界の権能",
+                           "kind": "unique_trait",
+                           "source_monster": "rank9_03_enmeria",
+                           "game_version": "0.7.4",
+                           "confidence": "unverified",
+                           "raw": {
+                             "text": "火炎免疫　冷気免疫　電撃免疫\n侵攻開始時、ダンジョン内の全ての味方に、判断力修正値の分だけ火炎ダメージ、冷気ダメージ、電撃ダメージを増加させる元素の権能を付与します。自身の火炎・冷気・電撃ダメージは、敵の耐性と免疫を無視します。\n元素の権能    敵に与える火炎ダメージ、冷気ダメージ、電撃ダメージが、術者の知恵修正値の分だけ増加します。",
+                             "source": "https://dungeonwithin.miraheze.org/wiki/Main_Page",
+                             "wiki_tags": [],
+                             "original_fields": {
+                               "bonuses": [
+                                 "火炎免疫",
+                                 "冷気免疫",
+                                 "電撃免疫"
+                               ]
+                             }
+                           },
+                           "ext": {},
+                           "structured": {
+                             "stat_bonus": {},
+                             "damage": []
+                           }
+                         }
+                       }
                      },
                      {
                          "id":  "rank9_04_transcendent",
@@ -3399,107 +3394,99 @@
                                        }
                      },
                      {
-                         "id":  "rank9_06_physis",
-                         "name":  "フュシス",
-                         "name_en":  "Physis",
-                         "race":  "undead",
-                         "rank":  9,
-                         "control_cost":  32,
-                         "game_version":  "0.7.4",
-                         "source":  "build228",
-                         "stats":  {
-                                       "hp":  210,
-                                       "ac":  8,
-                                       "initiative":  0,
-                                       "str":  12,
-                                       "dex":  16,
-                                       "con":  32,
-                                       "int":  30,
-                                       "wis":  34,
-                                       "cha":  38
-                                   },
-                         "immunities":  [
-                                            "necrotic"
-                                        ],
-                         "resistances":  [
-
-                                         ],
-                         "vulnerabilities":  [
-
-                                             ],
-                         "abilities":  {
-                                           "basic_attack":  {
-                                                                "id":  "rank9_06_physis_basic_attack",
-                                                                "name":  "血液抽出",
-                                                                "kind":  "basic_attack",
-                                                                "source_monster":  "rank9_06_physis",
-                                                                "game_version":  "0.7.4",
-                                                                "confidence":  "manual",
-                                                                "raw":  {
-                                                                            "text":  "対象から血を抜き取り、出血状態にします。\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間：8秒、個別スタック）",
-                                                                            "source":  "build228",
-                                                                            "wiki_tags":  [
-                                                                                              "主行動",
-                                                                                              "魅力基準",
-                                                                                              "呪文",
-                                                                                              "近接",
-                                                                                              "耐久力セーヴ（DC27魅力基準）",
-                                                                                              "CD6秒"
-                                                                                          ],
-                                                                            "original_fields":  {
-                                                                                                    "damage":  "5d6+7魅力修正値",
-                                                                                                    "damage_type":  "死霊"
-                                                                                                }
-                                                                        },
-                                                                "structured":  {
-                                                                                   "action_type":  "main_action",
-                                                                                   "delivery":  "spell",
-                                                                                   "range":  "melee",
-                                                                                   "base_stat":  "cha",
-                                                                                   "damage":  [
-                                                                                                  {
-                                                                                                      "dice":  "5d6+7",
-                                                                                                      "bonus_stat":  "cha",
-                                                                                                      "type":  "necrotic"
-                                                                                                  }
-                                                                                              ],
-                                                                                   "save":  {
-                                                                                                "stat":  "con",
-                                                                                                "dc_formula":  "27"
-                                                                                            }
-                                                                               },
-                                                                "ext":  {
-
-                                                                        }
-                                                            },
-                                           "unique_trait":  {
-                                                                "id":  "rank9_06_physis_unique_trait",
-                                                                "name":  "血の君臨",
-                                                                "kind":  "unique_trait",
-                                                                "source_monster":  "rank9_06_physis",
-                                                                "game_version":  "0.7.4",
-                                                                "confidence":  "manual",
-                                                                "raw":  {
-                                                                            "text":  "ダンジョンに侵攻した敵に血の君臨を1付与します。敵は出血を付与されるか、出血によるダメージを受けるたびに、追加で血の君臨を1得ます。自身の死霊ダメージは敵の耐性と免疫を無視します。\n血の君臨：出血がダメージを与えるたび、フュシスの魅力修正値＋1スタックにつき1d6の追加死霊ダメージを与えます。（最大スタック：20）\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間8秒,個別スタック）",
-                                                                            "source":  "b228",
-                                                                            "wiki_tags":  [
-
-                                                                                          ],
-                                                                            "original_fields":  {
-                                                                                                    "bonuses":  [
-                                                                                                                    "死霊ダメージ免疫",
-                                                                                                                    "状態異常免疫：死霊"
-                                                                                                                ]
-                                                                                                }
-                                                                        },
-                                                                "structured":  {
-
-                                                                               },
-                                                                "ext":  {
-
-                                                                        }
-                                                            }
-                                       }
+                       "id": "rank9_06_physis",
+                       "name": "フュシス",
+                       "name_en": "Physis",
+                       "race": "undead",
+                       "rank": 9,
+                       "control_cost": 32,
+                       "game_version": "0.7.4",
+                       "source": "build220",
+                       "stats": {
+                         "hp": 210,
+                         "ac": 8,
+                         "initiative": 0,
+                         "str": 12,
+                         "dex": 16,
+                         "con": 32,
+                         "int": 30,
+                         "wis": 34,
+                         "cha": 38
+                       },
+                       "immunities": [
+                         "necrotic"
+                       ],
+                       "resistances": [],
+                       "vulnerabilities": [],
+                       "abilities": {
+                         "basic_attack": {
+                           "id": "rank9_06_physis_basic_attack",
+                           "name": "血液抽出",
+                           "kind": "basic_attack",
+                           "source_monster": "rank9_06_physis",
+                           "game_version": "0.7.4",
+                           "confidence": "manual",
+                           "raw": {
+                             "text": "対象から血を抜き取り、出血状態にします。\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間：8秒、個別スタック）",
+                             "source": "build220",
+                             "wiki_tags": [
+                               "主行動",
+                               "魅力基準",
+                               "呪文",
+                               "近接",
+                               "耐久力セーヴ（DC27魅力基準）",
+                               "CD6秒"
+                             ],
+                             "original_fields": {
+                               "damage": "5d6+7魅力修正値",
+                               "damage_type": "死霊"
+                             }
+                           },
+                           "structured": {
+                             "action_type": "main_action",
+                             "delivery": "spell",
+                             "range": "melee",
+                             "base_stat": "cha",
+                             "damage": [
+                               {
+                                 "dice": "5d6+7",
+                                 "bonus_stat": "cha",
+                                 "type": "necrotic"
+                               }
+                             ],
+                             "save": {
+                               "stat": "con",
+                               "dc_formula": "27"
+                             },
+                             "stat_bonus": {}
+                           },
+                           "ext": {}
+                         },
+                         "unique_trait": {
+                           "id": "rank9_06_physis_unique_trait",
+                           "name": "血の君臨",
+                           "kind": "unique_trait",
+                           "source_monster": "rank9_06_physis",
+                           "game_version": "0.7.4",
+                           "confidence": "manual",
+                           "raw": {
+                             "text": "ダンジョンに侵攻した敵に血の君臨を1付与します。敵は出血を付与されるか、出血によるダメージを受けるたびに、追加で血の君臨を1得ます。自身の死霊ダメージは敵の耐性と免疫を無視します。\n血の君臨：出血がダメージを与えるたび、フュシスの魅力修正値＋1スタックにつき1d6の追加死霊ダメージを与えます。（最大スタック：20）\n出血：2秒ごとに1d4の物理ダメージを受けます。（持続時間8秒,個別スタック）",
+                             "source": "b228",
+                             "wiki_tags": [],
+                             "original_fields": {
+                               "bonuses": [
+                                 "死霊ダメージ免疫",
+                                 "状態異常免疫：死霊"
+                               ]
+                             }
+                           },
+                           "structured": {
+                             "stat_bonus": {},
+                             "damage": []
+                           },
+                           "ext": {}
+                         }
+                       }
                      }
                  ],
     "dataset_revision":  "ranked-english-ids-v2"
